@@ -8,7 +8,7 @@ class SiderMenu extends Component<any, any> {
   items = [
     {
       label: <Link to={"/"}>Home</Link>,
-      key: "/home",
+      key: "/",
       icon: <HomeOutlined />,
     },
     {
@@ -84,8 +84,6 @@ class SiderMenu extends Component<any, any> {
   ];
   constructor(props: any) {
     super(props);
-    console.log('111', this.props.location.pathname);
-    
     this.state = {
       current: this.props.location.pathname || "home",
     };
