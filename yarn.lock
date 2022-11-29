@@ -8784,10 +8784,10 @@ react-app-polyfill@^3.0.0:
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
 
-react-darui@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/react-darui/-/react-darui-1.0.2.tgz#8970c41143aebc59d801b1e490ac2b7c1dbb2b9d"
-  integrity sha512-Ug99Z84pz9TrLlWnlJH4Ly92w9XW4o3iKRfH6A0mPHeAhKKgh/OcQLGYklRymvSu84tlnk6Ed84Wy6624549Yw==
+react-darui@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/react-darui/-/react-darui-1.0.7.tgz#f5401598b2e422426ed41e4bfe86f3f7fc367c16"
+  integrity sha512-qOy1pG4iSxVrywB48y9hEqokp2/vYq8Nv2ubwd1LZ5z9h9YSLXvM0Y2WzR0sxGXO9sAUt1sBiGjRU0UDcHNqGg==
   dependencies:
     "@ant-design/icons" "^4.7.0"
     "@types/react" "^18.0.21"

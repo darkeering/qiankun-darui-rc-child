@@ -1,46 +1,100 @@
-# Getting Started with Create React App
+# 生成项目
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+```typescript
+npx create-react-app <app-name> --template=typescript
+```
 
-## Available Scripts
+# qiankun 配置
 
-In the project directory, you can run:
+1. 添加打包工具
+   ```typescript
+   yarn add @rescripts/cli
+   ```
+2. 配置打包信息，在根目录下添加 `.rescriptsrc.js`
 
-### `npm start`
+   ```typescript
+   const { name } = require("./package");
+   module.exports = {
+     webpack: (config) => {
+       config.output.library = `${name}-[name]`;
+       config.output.libraryTarget = "umd";
+       // config.output.jsonpFunction = `webpackJsonp_${name}`;
+       config.output.globalObject = "window";
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+       return config;
+     },
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+     devServer: (_) => {
+       const config = _;
+       config.port = "3002";
+       config.headers = {
+         "Access-Control-Allow-Origin": "*",
+       };
+       config.historyApiFallback = true;
+       config.hot = false;
+       // config.watchContentBase = false;
+       config.liveReload = false;
 
-### `npm test`
+       return config;
+     },
+   };
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. src 下添加 `public-path.js`
+   ```typescript
+   if (window.__POWERED_BY_QIANKUN__) {
+     // eslint-disable-next-line no-undef
+     __webpack_public_path__ = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__;
+   }
+   ```
+4. 修改 `index.jsx`
 
-### `npm run build`
+   ```typescript
+   import "./public-path";
+   import React from "react";
+   import ReactDOM from "react-dom";
+   import App from "./App";
+   import { BrowserRouter } from "react-router-dom";
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   function render(props) {
+     const { container } = props;
+     ReactDOM.render(
+       <BrowserRouter
+         basename={window.__POWERED_BY_QIANKUN__ ? "/rc-child" : "/"}
+       >
+         <App />
+       </BrowserRouter>,
+       container
+         ? container.querySelector("#root")
+         : document.querySelector("#root")
+     );
+   }
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   if (!window.__POWERED_BY_QIANKUN__) {
+     render({});
+   }
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   export async function bootstrap() {
+     console.log("[react16] react app bootstraped");
+   }
 
-### `npm run eject`
+   export async function mount(props) {
+     console.log("[react16] props from main framework", props);
+     render(props);
+   }
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+   export async function unmount(props) {
+     const { container } = props;
+     ReactDOM.unmountComponentAtNode(
+       container
+         ? container.querySelector("#root")
+         : document.querySelector("#root")
+     );
+   }
+   ```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# 组件库 react-darui
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+# 参考链接
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+> [antd 组件库](https://ant.design/components/overview-cn/)
